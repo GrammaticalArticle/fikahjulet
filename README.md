@@ -9,9 +9,6 @@
 * **Python 3.6+**
 * **colorama**
 * **pathlib**
-* **random**
-* **time**
-* **os**
 
 ---
 
@@ -25,7 +22,7 @@
 
 2. **Ladda ner alla imports:**
    ```bash
-   pip install colorama pathlib random time os
+   pip install colorama pathlib
    ```
 
 3. **Lägg till namnen:**
