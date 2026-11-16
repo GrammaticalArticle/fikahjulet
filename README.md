@@ -8,6 +8,7 @@
 
 * **Python 3.6+**
 * **colorama**
+* **En dator med MacOS *(om du vill köra fönsterversionen)***
 
 ---
 
@@ -62,12 +63,20 @@ python main.py
 ```
 
 ---
+På MacOS finns även ett speciellt läge som använder fönster för att skapa hjulet. I så fall, kör följande kommando:
+
+```bash
+python macmain.py
+```
+
+---
 
 ## Struktur
 
 ```text
 fikahjulet/
-├── main.py
 ├── data.json
+├── macmain.py
+├── main.py
 └── README.md
 ```
