@@ -59,7 +59,7 @@ winner = (7 * len(people)) + winnerindex
 for step in range(winner + 1):
     print("\033[H", end="") # Tillbaka till första raden
     print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}\n")
-    print(f"{colorama.Fore.LIGHTGREEN_EX}{colorama.Style.BRIGHT}{waveanimation[step % len(waveanimation)]} {colorama.Fore.BLUE}Snurrar hjulet... {colorama.Fore.LIGHTGREEN_EX}{colorama.Style.BRIGHT}{waveanimation[step % len(waveanimation)]}\n")
+    print(f"{colorama.Fore.LIGHTGREEN_EX}{colorama.Style.BRIGHT}{waveanimation[step % len(waveanimation)]} {colorama.Fore.BLUE}Snurrar hjulet... {colorama.Fore.LIGHTGREEN_EX}{colorama.Style.BRIGHT}{waveanimation[step % len(waveanimation)]}{colorama.Style.RESET_ALL}\n")
 
     arrowpoint = arrowindex % len(people)
     
