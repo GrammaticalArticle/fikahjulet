@@ -21,7 +21,7 @@ data_path = Path(__file__).with_name("data.json")
 data = json.loads(data_path.read_text(encoding="utf-8"))
 
 people = data["people"]
-taken = data["taken"]
+taken = data["taken"] 
 
 if taken == [True for _ in people]:
     taken = [False for _ in people]
