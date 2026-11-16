@@ -25,7 +25,7 @@
    ```
 
 3. **Lägg till namnen:**
-   Öppna `data.json` och ändra placeholders till riktiga namn. Beroende på `"taken"`s längd ändras antalet värden (`false` eller `true`) så att det matchar antalet personer:
+   Öppna `data.json` och ändra placeholders till riktiga namn. Värden i `"taken"` (`false` eller `true`) ändras nu automatiskt:
    ```json
    {
      "people": [
