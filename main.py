@@ -23,8 +23,8 @@ data = json.loads(data_path.read_text(encoding="utf-8"))
 people = data["people"]
 taken = data["taken"]
 
-if taken == [1 for _ in people]:
-    taken = [0 for _ in people]
+if taken == [True for _ in people]:
+    taken = [False for _ in people]
     data["taken"] = taken
 
 clear()
@@ -34,7 +34,7 @@ input("Tryck på enter för att snurra hjulet")
 clear()
 
 arrowindex = 0
-available = [i for i, status in enumerate(taken) if status == 0]
+available = [i for i, status in enumerate(taken) if not status]
 winnerindex = choice(available)
 winner = (7 * len(people)) + winnerindex
 
@@ -46,7 +46,7 @@ for step in range(winner + 1):
     
     for i, person in enumerate(people):
         arrow = " <--" if i == arrowpoint else "    "
-        style = (colorama.Fore.RED + colorama.Style.BRIGHT) if taken[i] == 1 else (colorama.Fore.WHITE + colorama.Style.NORMAL)
+        style = (colorama.Fore.RED + colorama.Style.BRIGHT) if taken[i] else (colorama.Fore.WHITE + colorama.Style.NORMAL)
         print(f"{style}{person:<12}{colorama.Style.RESET_ALL}{arrow}", flush=True)
         
     progress = step / winner
@@ -57,7 +57,7 @@ for step in range(winner + 1):
 
 print(f"\nFikahjulet landade på {people[winnerindex]}")
 
-taken[winnerindex] = 1
+taken[winnerindex] = True
 
 # Spara på slutet
 data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
