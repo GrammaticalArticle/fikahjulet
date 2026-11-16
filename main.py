@@ -28,7 +28,7 @@ if taken == [True for _ in people]:
     data["taken"] = taken
 
 clear()
-print("-- Fikahjulet --")
+print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}")
 sleep(1)
 input("Tryck på enter för att snurra hjulet")
 clear()
@@ -40,7 +40,7 @@ winner = (7 * len(people)) + winnerindex
 
 for step in range(winner + 1):
     print("\033[H", end="") # Tillbaka till första raden
-    print("-- Fikahjulet --\n")
+    print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}\n")
     
     arrowpoint = arrowindex % len(people)
     
