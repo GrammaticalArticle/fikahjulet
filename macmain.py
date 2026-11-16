@@ -65,7 +65,7 @@ for i, person in enumerate(people):
 
     bg_color = "#7f1d1d" if taken[i] else "#0f172a"
     fg_color = "#fca5a5" if taken[i] else "#38bdf8"
-    status_txt = "REDAN TAGEN" if taken[i] else f"{100/n:.1f}% CHANS"
+    status_txt = "REDAN TAGEN" if taken[i] else f"{100/len(available):.1f}% CHANS"
 
     frame = tk.Frame(win, bg=bg_color)
     frame.pack(fill="both", expand=True)
@@ -98,12 +98,12 @@ arrow_x = int(cx + radius + (win_w / 2) + 30)
 arrow_y = int(cy - (arrow_h / 2))
 arrow_win.geometry(f"{arrow_w}x{arrow_h}+{arrow_x}+{arrow_y}")
 
-full_spins = 4
+full_spins = 9
 step_angle = (2 * math.pi) / n
 target_offset = 0.0 - (winnerindex * step_angle)
 total_rotation = (full_spins * 2 * math.pi) + (target_offset % (2 * math.pi))
 
-total_frames = 660  # 11 sekunder @ 60 FPS
+total_frames = 600*3  # 11 sekunder @ 60 FPS
 frame = 0
 
 def animate():
