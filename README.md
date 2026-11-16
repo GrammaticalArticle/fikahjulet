@@ -1,6 +1,6 @@
 # Fikahjulet
 
-**Fikahjulet** är ett hjul som jag har kodat i Python för att välja vem ska bjuda på *fika* nästa gång.
+**Fikahjulet** är ett hjul som jag har kodat i Python för att välja vem det är som ska bjuda på *fika* nästa gång.
 
 ---
 
@@ -53,7 +53,7 @@
 
 ---
 
-## Hur att starta Fikahjulet?
+## Hur startar man Fikahjulet?
 
 Kör följande kommando:
 
