@@ -8,7 +8,6 @@
 
 * **Python 3.6+**
 * **colorama**
-* **pathlib**
 
 ---
 
@@ -22,7 +21,7 @@
 
 2. **Ladda ner alla imports:**
    ```bash
-   pip install colorama pathlib
+   pip install colorama
    ```
 
 3. **Lägg till namnen:**
