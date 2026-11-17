@@ -2,13 +2,14 @@
 
 **Fikahjulet** är ett hjul som jag har kodat i Python för att välja vem det är som ska bjuda på *fika* nästa gång.
 
+**Fikahjulet** använder `colorama` i den klassiska versionen (`main.py`) som kört i konsollen, och `tkinter` för att skapa fönstren i fönster-läge (`windowmain.py`)
+
 ---
 
 ## Vad behövs?
 
 * **Python 3.6+**
 * **colorama**
-* **En dator med MacOS *(om du vill köra fönsterversionen)***
 
 ---
 
@@ -20,13 +21,13 @@
    cd fikahjulet
    ```
 
-2. **Ladda ner alla imports:**
+2. **Ladda ner colorama:**
    ```bash
    pip install colorama
    ```
 
 3. **Lägg till namnen:**
-   Öppna `data.json` och ändra placeholders till riktiga namn. Värden i `"taken"` (`false` eller `true`) ändras nu automatiskt:
+   Öppna `data.json` och ändra placeholders till riktiga namn. Värden i `"taken"` (`false` eller `true`) ändras  automatiskt:
    ```json
    {
      "people": [
@@ -56,17 +57,17 @@
 
 ## Hur startar man Fikahjulet?
 
-Kör följande kommando:
+Om du vill köra den klassiska versionen i terminalen, kör följande kommando:
 
 ```bash
 python main.py
 ```
 
 ---
-På MacOS finns även ett speciellt läge som använder fönster för att skapa hjulet. I så fall, kör följande kommando:
+Det finns även ett annat läge som använder fönster för att skapa hjulet och en liten animation på början. I så fall, kör följande kommando:
 
 ```bash
-python macmain.py
+python windowmain.py
 ```
 
 ---
@@ -76,7 +77,8 @@ python macmain.py
 ```text
 fikahjulet/
 ├── data.json
-├── macmain.py
+├── .gitignore
+├── windowmain.py
 ├── main.py
 └── README.md
 ```
