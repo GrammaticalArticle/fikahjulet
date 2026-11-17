@@ -19,16 +19,16 @@ data = json.loads(data_path.read_text(encoding="utf-8"))
 people = [p.strip() for p in data["people"]]
 taken = data["taken"]
 
+format_json(taken, people, data)
+
+people = [p.strip() for p in data["people"]]
+taken = data["taken"]
+
 if not people:
     print("Inga personer hittades i data.json!")
     sys.exit()
 
 available = [i for i, status in enumerate(taken) if not status]
-if not available:
-    print("Alla personer är redan tagna!")
-    sys.exit()
-
-format_json(taken, people, data)
 
 print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}")
 input("Tryck på Enter för att starta hjulet...")
@@ -238,7 +238,7 @@ def animate():
             end_line_win.overrideredirect(True)
             end_line_win.attributes("-topmost", True)
             tk.Frame(end_line_win, bg="#dc2626").pack(fill="both", expand=True)
-            finish_line_x = screen_w - 550
+            finish_line_x = screen_w - 250
             end_line_win.geometry(f"10x20+{finish_line_x}+60")
             end_line_win.update_idletasks()
             end_line_win.lift()
@@ -247,7 +247,7 @@ def animate():
             t = ease_out_cubic(local_f / phase5_frames)
             current_h = int(lerp(20, screen_h - 120, t))
             red_line_win.geometry(f"10x{current_h}+540+60")
-            end_line_win.geometry(f"10x{current_h}+{screen_w - 550}+60")
+            end_line_win.geometry(f"10x{current_h}+{screen_w - 250}+60")
 
     # 6. Nedräkning 3, 2, 1, 0
     elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames:

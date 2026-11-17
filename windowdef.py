@@ -13,7 +13,7 @@ def ease_out_cubic(t):
 
 def get_line_pos(i, screen_w, screen_h, n, win_h):
     lx = int(screen_w * 0.15)
-    total_h = min(screen_h - 120, n * (win_h + 10))
+    total_h = min(screen_h - 250, n * (win_h + 10))
     start_y = (screen_h - total_h) // 2
     step_y = total_h / max(1, n - 1) if n > 1 else 0
     ly = int(start_y + i * step_y - (win_h / 2))
