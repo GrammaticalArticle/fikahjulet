@@ -2,6 +2,7 @@ import json
 import tkinter as tk
 from pathlib import Path
 from common import clear
+from time import sleep
 
 # Läs in data.json
 data_path = Path(__file__).with_name("data.json")
@@ -54,6 +55,7 @@ def remove():
 def save():
     data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
     print("Ändringarna har sparats till data.json!")
+    sleep(0.2)
 
 # Koppla knapparna till funktionerna
 btn_add = tk.Button(root, text="Lägg till", command=add)
