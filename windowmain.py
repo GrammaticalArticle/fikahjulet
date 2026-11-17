@@ -19,7 +19,9 @@ data = json.loads(data_path.read_text(encoding="utf-8"))
 people = [p.strip() for p in data["people"]]
 taken = data["taken"]
 
-format_json(taken, people, data)
+taken, people, data = format_json(data["taken"], data["people"], data)
+
+data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
 
 people = [p.strip() for p in data["people"]]
 taken = data["taken"]
@@ -27,6 +29,8 @@ taken = data["taken"]
 if not people:
     print("Inga personer hittades i data.json!")
     sys.exit()
+
+format_json(taken, people, data)
 
 available = [i for i, status in enumerate(taken) if not status]
 

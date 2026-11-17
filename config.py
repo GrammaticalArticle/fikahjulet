@@ -4,15 +4,18 @@ from pathlib import Path
 from common import clear
 from time import sleep
 import colorama
+from common import format_json
 
 # Läs in data.json
 data_path = Path(__file__).with_name("data.json")
 data = json.loads(data_path.read_text(encoding="utf-8"))
 
-if "taken" not in data:
-    data["taken"] = [False] * len(data["people"])
-elif len(data["taken"]) < len(data["people"]):
-    data["taken"].extend([False] * (len(data["people"]) - len(data["taken"])))
+taken, people, data = format_json(data["taken"], data["people"], data)
+
+data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
+
+data_path = Path(__file__).with_name("data.json")
+data = json.loads(data_path.read_text(encoding="utf-8"))
 
 root = tk.Tk()
 root.title("Fikahjulet Configuration")

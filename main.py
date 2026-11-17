@@ -16,6 +16,10 @@ colorama.init()
 data_path = Path(__file__).with_name("data.json")
 data = json.loads(data_path.read_text(encoding="utf-8"))
 
+taken, people, data = format_json(data["taken"], data["people"], data)
+
+data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
+
 people = data["people"]
 taken = data["taken"]
 
