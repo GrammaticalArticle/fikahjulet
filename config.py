@@ -38,6 +38,7 @@ def add():
             for i in range(15):
                 print("(det här är fake)")
                 print("Deleting System32 [" + "#"*i + " "*(15-i) + "]")
+                sleep(0.1)
                 clear()
                 entry.delete(0, tk.END)
 
