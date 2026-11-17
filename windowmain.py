@@ -1,4 +1,5 @@
-# This file is only for Mac users
+# spoiler: jag har kollat upp en massa kod för att jag
+#          inte har en aning hur fönster i tkinter funkar
 import sys
 import json
 import math
@@ -8,11 +9,6 @@ from random import choice, uniform
 import colorama
 
 colorama.init()
-
-if sys.platform != "darwin":
-    print("Denna program fungerar bara på macOS. Starta main.py istället.")
-    print("Jag kommer inte ens försöka porta detta till Windows eller Linux.")
-    sys.exit()
 
 # Läsa json, skapa variabler
 data_path = Path(__file__).with_name("data.json")
