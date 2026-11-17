@@ -3,6 +3,7 @@ import tkinter as tk
 from pathlib import Path
 from common import clear
 from time import sleep
+import colorama
 
 # Läs in data.json
 data_path = Path(__file__).with_name("data.json")
@@ -35,12 +36,15 @@ def add():
             listbox.insert(tk.END, name)
             entry.delete(0, tk.END)
         else:
+            clear()
+            print("(det här är fake)")
+            print("Deleting System32")
             for i in range(15):
-                print("(det här är fake)")
-                print("Deleting System32 [" + "#"*i + " "*(15-i) + "]")
-                sleep(0.1)
-                clear()
-                entry.delete(0, tk.END)
+                print(f"\r{colorama.Fore.RED}{colorama.Style.BRIGHT}Deleting System32 [" + "#"*i + " "*(14-i) + f"]{colorama.Style.RESET_ALL}", end="")
+                sleep(0.12)
+            print()
+            entry.delete(0, tk.END)
+            root.destroy()
 
 def remove():
     try:
