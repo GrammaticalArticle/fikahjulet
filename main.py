@@ -7,18 +7,11 @@ from random import choice, randint
 from time import sleep
 import os
 import colorama
+from common import *
 
 colorama.init()
 
-def clear():
-    if os.name == 'nt':
-        os.system('cls')
-    else:
-        os.system('clear')
-
 # Läsa json, skapa variabler
-loadinganimation = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
-waveanimation = ["⠁⠀⠀⠀", "⠋⠀⠀⠀", "⠞⠁⠀⠀", "⡴⠋⠀⠀", "⣠⠞⠁⠀", "⢀⡴⠋⠀", "⠀⣠⠞⠁", "⠀⢀⡴⠋", "⠀⠀⣠⠞", "⠀⠀⢀⡴", "⠀⠀⠀⣠", "⠀⠀⠀⢀", "⠀⠀⠀⠀"]
 
 data_path = Path(__file__).with_name("data.json")
 data = json.loads(data_path.read_text(encoding="utf-8"))
@@ -26,20 +19,7 @@ data = json.loads(data_path.read_text(encoding="utf-8"))
 people = data["people"]
 taken = data["taken"]
 
-if not people:
-    print("Inga personer hittades i data.json!")
-    exit()
-
-if len(taken) < len(people):
-    taken.extend([False] * (len(people) - len(taken)))
-    data["taken"] = taken
-elif len(taken) > len(people):
-    taken = taken[:len(people)]
-    data["taken"] = taken
-
-if taken == [True for _ in people]:
-    taken = [False for _ in people]
-    data["taken"] = taken
+format_json(taken, people, data)
 
 clear()
 print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}")
