@@ -7,6 +7,8 @@ import tkinter as tk
 from pathlib import Path
 from random import choice, uniform
 import colorama
+from common import clear, format_json
+from windowdef import *
 
 colorama.init()
 
@@ -21,16 +23,7 @@ if not people:
     print("Inga personer hittades i data.json!")
     sys.exit()
 
-if len(taken) < len(people):
-    taken.extend([False] * (len(people) - len(taken)))
-    data["taken"] = taken
-elif len(taken) > len(people):
-    taken = taken[:len(people)]
-    data["taken"] = taken
-
-if taken == [True for _ in people]:
-    taken = [False for _ in people]
-    data["taken"] = taken
+format_json(taken, people, data)
 
 print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}")
 input("Tryck på Enter för att starta hjulet...")
@@ -113,26 +106,6 @@ spin_frames = 660       # 3. Hjulsnurret (11 sek)
 
 frame = 0
 
-def lerp(a, b, t): # Linear
-    return a + (b - a) * t
-
-def ease_out_cubic(t):
-    return 1 - ((1 - t) ** 3)
-
-def get_line_pos(i):
-    lx = int(screen_w * 0.15)
-    total_h = min(screen_h - 120, n * (win_h + 10))
-    start_y = (screen_h - total_h) // 2
-    step_y = total_h / max(1, n - 1) if n > 1 else 0
-    ly = int(start_y + i * step_y - (win_h / 2))
-    return lx, ly
-
-def get_circle_pos(i, rot=0.0):
-    angle = rot + (i * step_angle)
-    x = int(cx + radius * math.cos(angle) - (win_w / 2))
-    y = int(cy + radius * math.sin(angle) - (win_h / 2))
-    return x, y
-
 def animate():
     global frame
     center_x = int(cx - (win_w / 2))
@@ -142,7 +115,7 @@ def animate():
     if frame <= line_frames:
         t = ease_out_cubic(frame / line_frames)
         for i, (win, _, _, _) in enumerate(cards):
-            lx, ly = get_line_pos(i)
+            lx, ly = get_line_pos(i, screen_w, screen_h, n, win_h)
             x = int(lerp(center_x, lx, t))
             y = int(lerp(center_y, ly, t))
             win.geometry(f"{win_w}x{win_h}+{x}+{y}")
@@ -156,8 +129,8 @@ def animate():
 
         # Vi hittar vart varje fönster ska vara
         for i, (win, _, _, _) in enumerate(cards):
-            lx, ly = get_line_pos(i)
-            final_tx, final_ty = get_circle_pos(i, 0.0)
+            lx, ly = get_line_pos(i, screen_w, screen_h, n, win_h)
+            final_tx, final_ty = get_circle_pos(i, 0.0, step_angle, cx, cy, radius, win_w, win_h)
             
             # delay
             delay = i * (snake_frames / (n * 1.5))
@@ -179,7 +152,7 @@ def animate():
         current_rot = ease * total_rotation
 
         for i, (win, _, _, _) in enumerate(cards):
-            x, y = get_circle_pos(i, current_rot)
+            x, y = get_circle_pos(i, current_rot, step_angle, cx, cy, radius, win_w, win_h)
             win.geometry(f"{win_w}x{win_h}+{x}+{y}")
 
     total_all = line_frames + snake_frames + spin_frames
