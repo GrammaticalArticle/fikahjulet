@@ -78,7 +78,9 @@ python windowmain.py
 fikahjulet/
 ├── data.json
 ├── .gitignore
+├── README.md
 ├── windowmain.py
 ├── main.py
-└── README.md
+├── common.py
+└── windowdef.py
 ```
