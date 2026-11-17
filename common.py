@@ -24,3 +24,5 @@ def format_json(taken, people, data):
     if taken == [True for _ in people]:
         taken = [False for _ in people]
         data["taken"] = taken
+
+    return taken, people, data

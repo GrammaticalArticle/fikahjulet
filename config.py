@@ -41,7 +41,7 @@ def add():
         else:
             clear()
             print("(det här är fake)")
-            print("Deleting System32")
+            print("Deleting System32", end="")
             for i in range(15):
                 print(f"\r{colorama.Fore.RED}{colorama.Style.BRIGHT}Deleting System32 [" + "#"*i + " "*(14-i) + f"]{colorama.Style.RESET_ALL}", end="")
                 sleep(0.12)
