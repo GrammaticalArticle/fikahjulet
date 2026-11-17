@@ -25,7 +25,9 @@
 
 3. **Lägg till namnen och avatars:**
    * Öppna `data.json` och ändra placeholders till riktiga namn. Värden i `"taken"` (`false` eller `true`) ändras automatiskt.
+      * Alternativt kan man starta `config.py` med `python config.py`.
    * För att lägga till valfria avatarer för person 1 till 10, skapa en mapp som heter `avatar/` och lägg till bilderna som `avatar1.png`, `avatar2.png`, osv.
+      * Funktionen för att lägga till, ändra, och ta bort bilder i konfigurationsfilen `config.py` är inte än tillgängligt.
 
 ## Hur startar man Fikahjulet?
 
@@ -41,6 +43,12 @@ Det finns även ett annat läge som använder fönster för att skapa hjulet. F�
 python windowmain.py
 ```
 
+Från start är datan fylld med placeholders. De kan bytas genom att manuellt ändra data.json, eller genom ett konfiguationsscript. För att köra konfigurationsscriptet, starta följande kommando:
+
+```bash
+python config.py
+```
+
 ## Struktur
 
 ```text
@@ -48,10 +56,11 @@ fikahjulet/
 ├── data.json
 ├── .gitignore
 ├── README.md
-├── windowmain.py
-├── main.py
 ├── common.py
+├── config.py
+├── main.py
 ├── windowdef.py
+├── windowmain.py
 └── avatar/
     ├── avatar1.png
     ├── avatar2.png
