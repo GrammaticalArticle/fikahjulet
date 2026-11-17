@@ -1,5 +1,6 @@
 import math
 import tkinter as tk
+from PIL import Image, ImageTk
 import json
 import colorama
 from pathlib import Path
@@ -24,26 +25,21 @@ def get_circle_pos(i, rot=0.0, step_angle=0.0, cx=0, cy=0, radius=0, win_w=0, wi
     y = int(cy + radius * math.sin(angle) - (win_h / 2))
     return x, y
 
-def get_question_mark_pos(i, win_w, win_h):
-    custom_coords = {
-        0: (610, 295, 180, 62),    # Fönster #1
-        1: (790, 225, 180, 62),    # Fönster #2
-        2: (970, 225, 180, 62),    # Fönster #3
-        3: (1135, 295, 180, 62),   # Fönster #4
-        4: (1135, 365, 180, 62),   # Fönster #5
-        5: (1033, 435, 180, 62),   # Fönster #6
-        6: (932, 505, 180, 62),    # Fönster #7
-        7: (830, 575, 180, 62),    # Fönster #8
-        8: (830, 645, 180, 104),   # Fönster #9
-        9: (830, 830, 180, 62),    # Fönster #10
-    }
-    
-    if i in custom_coords:
-        x, y, w, h = custom_coords[i]
-    else:
-        x, y, w, h = (200 + (i * 50), 300, 180, 62)
-        
-    return int(x), int(y), int(w), int(h)
+def load_avatar(i, win_h):
+    """Laddar avatar (avatar/avatar[1..10].png) om den finns, utan att sträcka ut den."""
+    avatar_path = Path(__file__).parent / "avatar" / f"avatar{i + 1}.png"
+    if avatar_path.exists():
+        try:
+            img = Image.open(avatar_path)
+            # Anpassa höjden efter fönstret men behåll proportioner (ingen stretch)
+            target_h = win_h - 12
+            aspect_ratio = img.width / img.height
+            target_w = max(1, int(target_h * aspect_ratio))
+            img = img.resize((target_w, target_h), Image.Resampling.LANCZOS)
+            return ImageTk.PhotoImage(img)
+        except Exception:
+            return None
+    return None
 
 def finish_spin(people, cards, winnerindex, taken, data_path, data):
     winner_name = people[winnerindex]
@@ -59,13 +55,12 @@ def finish_spin(people, cards, winnerindex, taken, data_path, data):
     taken[winnerindex] = True
     data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
 
-
 def close_button(arrow_frame, root):
     for widget in arrow_frame.winfo_children():
         widget.destroy()
-        tk.Button(
-            arrow_frame,
-            text="Stäng hjul ✕",
-            font=("Helvetica", 12, "bold"),
-            command=root.destroy
-        ).pack(expand=True, fill="both")
+    tk.Button(
+        arrow_frame,
+        text="Stäng hjul ✕",
+        font=("Helvetica", 12, "bold"),
+        command=root.destroy
+    ).pack(expand=True, fill="both")

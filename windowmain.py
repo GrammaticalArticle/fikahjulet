@@ -50,8 +50,10 @@ n = len(people)
 winnerindex = choice(available)
 winner_name = people[winnerindex]
 
-# Skapa ett fönster per person
+# Skapa ett fönster per person med valfri avatar
 cards = []
+avatar_references = [] # Sparar referenser så bilderna inte raderas av garbage collector
+
 for i, person in enumerate(people):
     win = tk.Toplevel(root)
     win.title(f"#{i + 1}")
@@ -65,20 +67,30 @@ for i, person in enumerate(people):
     frame = tk.Frame(win, bg=bg_color)
     frame.pack(fill="both", expand=True)
 
-    name_lbl = tk.Label(frame, text=person, font=("Helvetica", 14, "bold"), bg=bg_color, fg="#ffffff")
-    name_lbl.pack(pady=(6, 0))
+    # Ladda avatar om den finns (placeras till vänster)
+    avatar_img = load_avatar(i, win_h)
+    if avatar_img:
+        avatar_references.append(avatar_img)
+        avatar_lbl = tk.Label(frame, image=avatar_img, bg=bg_color)
+        avatar_lbl.pack(side="left", padx=(6, 2))
 
-    sub_lbl = tk.Label(frame, text=status_txt, font=("Helvetica", 10, "bold"), bg=bg_color, fg=fg_color)
-    sub_lbl.pack()
+    # Text-container för namn och subtext
+    text_frame = tk.Frame(frame, bg=bg_color)
+    text_frame.pack(side="left", fill="both", expand=True)
 
-    # Placera alla på samma punkt i mitten från början
+    name_lbl = tk.Label(text_frame, text=person, font=("Helvetica", 14, "bold"), bg=bg_color, fg="#ffffff")
+    name_lbl.pack(pady=(6, 0), anchor="w" if avatar_img else "center")
+
+    sub_lbl = tk.Label(text_frame, text=status_txt, font=("Helvetica", 10, "bold"), bg=bg_color, fg=fg_color)
+    sub_lbl.pack(anchor="w" if avatar_img else "center")
+
     start_x = int(cx - (win_w / 2))
     start_y = int(cy - (win_h / 2))
     win.geometry(f"{win_w}x{win_h}+{start_x}+{start_y}")
 
     cards.append((win, frame, name_lbl, sub_lbl))
 
-# Skapa pil på höger sida (gömd) - Ursprunglig position vid start
+# Skapa pil på höger sida (gömd)
 arrow_win = tk.Toplevel(root)
 arrow_win.title("Pil")
 arrow_win.resizable(False, False)
@@ -115,21 +127,15 @@ step_angle = (2 * math.pi) / n
 target_offset = 0.0 - (winnerindex * step_angle)
 total_rotation = (full_spins * 2 * math.pi) + (target_offset % (2 * math.pi))
 
-# Tid i frames (@ 60 FPS)
-phase1_frames = 120        # 1. Mitten till linjen       2 sek
-phase2_frames = 180        # 2. Bildar cirkeln           3 sek
-phase3_frames = 900        # 3. Hjulsnurret             15 sek
-
-# Fas 4 (hoppar direkt till linje på 2 sek = 120 frames)
+phase1_frames = 120
+phase2_frames = 180
+phase3_frames = 900
 phase4_frames = 120
-
-phase5_frames = 120        # 5. Gör en linje (race)     2 sek
-phase6_frames = 360        # 6. Skapa röda linjer       2 sek
-phase7_frames = 360        # 7. Nedräkning 3, 2, 1, 0   6 sek (60 frames per sekund)
-phase8_frames = 900        # 8. Race                   15 sek
+phase5_frames = 120
+phase6_frames = 360
+phase7_frames = 900
 
 frame = 0
-
 red_line_win = None
 end_line_win = None
 traffic_lights = []
@@ -193,7 +199,7 @@ def animate():
             x, y = get_circle_pos(i, current_rot, step_angle, cx, cy, radius, win_w, win_h)
             win.geometry(f"{win_w}x{win_h}+{x}+{y}")
 
-    # 4. Direkt till linje utan frågetecken (2 sekunder)
+    # 4. Direkt till linje utan frågetecken
     elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames:
         local_f = frame - (phase1_frames + phase2_frames + phase3_frames)
 
@@ -213,10 +219,9 @@ def animate():
 
             x = int(lerp(start_x, lx, t))
             y = int(lerp(start_y, ly, t))
-            
             win.geometry(f"{win_w}x{win_h}+{x}+{y}")
 
-    # 5. Skapa röda linjer (Startlinje och Mållinje)
+    # 5. Skapa röda linjer
     elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames:
         local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames)
 
@@ -244,7 +249,7 @@ def animate():
             red_line_win.geometry(f"10x{current_h}+540+60")
             end_line_win.geometry(f"10x{current_h}+{screen_w - 550}+60")
 
-    # 6. Nedräkning 3, 2, 1, 0 (360 frames = 6 sekunder @ 60 FPS)
+    # 6. Nedräkning 3, 2, 1, 0
     elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames:
         local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames)
 
@@ -255,7 +260,6 @@ def animate():
         start_y = 40
         target_y = 110
 
-        # Sekund 1 (frames 1 - 60): Skapa trafikljus och visa "3" (alla röda eller mörka början)
         if local_f == 1:
             traffic_lights.clear()
             for idx in range(3):
@@ -281,7 +285,6 @@ def animate():
                 lx = base_x + idx * (light_w + spacing)
                 l_win.geometry(f"{light_w}x{cur_h}+{lx}+{cur_y}")
 
-            # Mjuk förflyttning av pilen till 125 px från toppen
             current_arrow_x, current_arrow_y = arrow_win.winfo_x(), arrow_win.winfo_y()
             target_arrow_x = int((screen_w - arrow_w) // 2)
             target_arrow_y = 125
@@ -291,34 +294,29 @@ def animate():
             arrow_win.geometry(f"{arrow_w}x{arrow_h}+{ax}+{ay}")
             arrow_win.lift()
 
-        # Sekund 2 (frames 61 - 120): Siffra 2, första ljuset blir RÖTT
         elif local_f == 61:
             arrow_name_lbl.configure(text="2")
             traffic_lights[0][0].configure(bg="#ef4444")
             traffic_lights[0][1].configure(bg="#ef4444")
 
-        # Sekund 3 (frames 121 - 180): Siffra 1, andra ljuset blir GULT
         elif local_f == 121:
             arrow_name_lbl.configure(text="1")
             traffic_lights[1][0].configure(bg="#eab308")
             traffic_lights[1][1].configure(bg="#eab308")
 
-        # Sekund 4 (frames 181 - 240): Siffra 0, tredje ljuset blir GRÖNT
         elif local_f == 181:
             arrow_name_lbl.configure(text="0")
             traffic_lights[2][0].configure(bg="#22c55e")
             traffic_lights[2][1].configure(bg="#22c55e")
 
-        # Sekund 5-6 (frames 241 - 360): "KÖR!!" (eller liknande text) innan racet startar
         elif local_f == 241:
             arrow_name_lbl.configure(text="KÖR!!")
 
-    # 7. Racet (900 frames = 15 sek) + startljusen glider ut samtidigt
+    # 7. Racet
     elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames + phase7_frames:
         local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames)
         t = local_f / phase7_frames
 
-        # Glid ut startljusen uppåt under första sekunden av racet
         if local_f <= 60 and traffic_lights:
             light_w, light_h = 90, 90
             spacing = 20
@@ -344,13 +342,20 @@ def animate():
             progress = max(0.0, base_progress + surge * (1 - abs(2 * t - 1)))
 
             x = int(lerp(start_x, finish_line_x, progress))
-            win.geometry(f"{win_w}x{win_h}+{x}+{ly}")
+            
+            # Gör vinnarens fönster lite större under racet för att indikera vinsten
+            if i == winnerindex:
+                r_w, r_h = 210, 72
+                win.geometry(f"{r_w}x{r_h}+{x}+{ly - 5}")
+            else:
+                win.geometry(f"{win_w}x{win_h}+{x}+{ly}")
 
         if local_f == phase7_frames:
             win, frame_w, name_lbl, sub_lbl = cards[winnerindex]
             frame_w.configure(bg="#ca8a04")
-            name_lbl.configure(bg="#ca8a04", text=f"👑 {winner_name} 👑")
-            sub_lbl.configure(bg="#ca8a04", fg="#fef08a", text="DUBBELVINNARE!")
+            # Förstora texten och ge vinnaren en distinkt storlek/look
+            name_lbl.configure(font=("Helvetica", 16, "bold"), bg="#ca8a04", text=f"👑 {winner_name} 👑")
+            sub_lbl.configure(font=("Helvetica", 11, "bold"), bg="#ca8a04", fg="#fef08a", text="DUBBELVINNARE!")
             win.lift()
 
     total_all = (
