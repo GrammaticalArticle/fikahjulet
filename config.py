@@ -56,7 +56,7 @@ btn_add.pack(padx=10, pady=2, fill="x")
 btn_remove = tk.Button(root, text="Ta bort markerad", command=remove)
 btn_remove.pack(padx=10, pady=2, fill="x")
 
-btn_save = tk.Button(root, text="Spara", bg="#22c55e", fg="white", command=save)
+btn_save = tk.Button(root, text="Spara",command=save)
 btn_save.pack(padx=10, pady=10, fill="x")
 
 root.mainloop()
