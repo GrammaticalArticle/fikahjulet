@@ -78,7 +78,7 @@ for i, person in enumerate(people):
 
     cards.append((win, frame, name_lbl, sub_lbl))
 
-# Skapa pil på höger sida (gömd)
+# Skapa pil på höger sida (gömd) - Ursprunglig position vid start
 arrow_win = tk.Toplevel(root)
 arrow_win.title("Pil")
 arrow_win.resizable(False, False)
@@ -120,19 +120,34 @@ phase1_frames = 120        # 1. Mitten till linjen       2 sek
 phase2_frames = 180        # 2. Bildar cirkeln           3 sek
 phase3_frames = 900        # 3. Hjulsnurret             15 sek
 
-# Fas 4 uppdelad i exakta steg (300 + 180 + 300 = 780 frames)
-p4_wait1 = 300             # Vänta 5 sek efter snurr
-p4_morph = 180             # Forma frågetecken (3 sek)
-p4_wait2 = 300             # Vänta 5 sek efter textbyte
-phase4_frames = p4_wait1 + p4_morph + p4_wait2
+# Fas 4 (hoppar direkt till linje på 2 sek = 120 frames)
+phase4_frames = 120
 
-phase5_frames = 180        # 5. Gör en linje (race)     3 sek
-phase6_frames = 120        # 6. Skapa rött streck       2 sek
+phase5_frames = 120        # 5. Gör en linje (race)     2 sek
+phase6_frames = 360        # 6. Skapa röda linjer       2 sek
+phase7_frames = 360        # 7. Nedräkning 3, 2, 1, 0   6 sek (60 frames per sekund)
+phase8_frames = 900        # 8. Race                   15 sek
 
 frame = 0
 
+red_line_win = None
+end_line_win = None
+traffic_lights = []
+
+race_profiles = []
+for i in range(n):
+    if i == winnerindex:
+        finish_ratio = 1.0
+        wobble1 = uniform(0.02, 0.05)
+        wobble2 = uniform(-0.04, -0.01)
+    else:
+        finish_ratio = uniform(0.85, 0.97)
+        wobble1 = uniform(0.06, 0.14)
+        wobble2 = uniform(-0.07, 0.05)
+    race_profiles.append((finish_ratio, wobble1, wobble2))
+
 def animate():
-    global frame
+    global frame, red_line_win, end_line_win, traffic_lights
     center_x = int(cx - (win_w / 2))
     center_y = int(cy - (win_h / 2))
 
@@ -178,53 +193,170 @@ def animate():
             x, y = get_circle_pos(i, current_rot, step_angle, cx, cy, radius, win_w, win_h)
             win.geometry(f"{win_w}x{win_h}+{x}+{y}")
 
-    # 4. Frågetecken och textsekvens
+    # 4. Direkt till linje utan frågetecken (2 sekunder)
     elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames:
         local_f = frame - (phase1_frames + phase2_frames + phase3_frames)
 
         if local_f == 1:
             finish_spin(people, cards, winnerindex, taken, data_path, data)
             arrow_win.title("Fikahjulet")
-            arrow_name_lbl.configure(text="Ge inte upp än.")
-            arrow_sub_lbl.configure(text="Spelet är inte slut.")
+            arrow_name_lbl.configure(text="GÖR ER REDO!")
+            arrow_sub_lbl.configure(text="Ställ upp vid startlinjen!")
             arrow_win.lift()
 
-        elif p4_wait1 < local_f <= p4_wait1 + p4_morph:
-            morph_f = local_f - p4_wait1
-            t = morph_f / p4_morph
-            ease = ease_out_cubic(t)
-            final_rot = total_rotation
+        t = ease_out_cubic(local_f / phase4_frames)
+        final_rot = total_rotation
 
-            for i, (win, _, name_lbl, sub_lbl) in enumerate(cards):
-                start_x, start_y = get_circle_pos(i, final_rot, step_angle, cx, cy, radius, win_w, win_h)
-                final_x, final_y, target_w, target_h = get_question_mark_pos(i, win_w, win_h)
-
-                x = int(lerp(start_x, final_x, ease))
-                y = int(lerp(start_y, final_y, ease))
-                w = int(lerp(win_w, target_w, ease))
-                h = int(lerp(win_h, target_h, ease))
-                
-                win.geometry(f"{w}x{h}+{x}+{y}")
-
-        elif local_f == p4_wait1 + p4_morph + 1:
-            arrow_name_lbl.configure(text="Det finns fortfarande en chans")
-            arrow_sub_lbl.configure(text="för någon annan att vinna!")
-            arrow_win.lift()
-
-    elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames:
-        local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames)
-        t = ease_out_cubic(frame / phase5_frames)
         for i, (win, _, _, _) in enumerate(cards):
+            start_x, start_y = get_circle_pos(i, final_rot, step_angle, cx, cy, radius, win_w, win_h)
             lx, ly = get_line_pos(i, screen_w, screen_h, n, win_h)
-            x = int(lerp(center_x, lx, t))
-            y = int(lerp(center_y, ly, t))
+
+            x = int(lerp(start_x, lx, t))
+            y = int(lerp(start_y, ly, t))
+            
             win.geometry(f"{win_w}x{win_h}+{x}+{y}")
 
-    elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames:
-            local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames)
-    
+    # 5. Skapa röda linjer (Startlinje och Mållinje)
+    elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames:
+        local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames)
 
-    total_all = phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames
+        if local_f == 1:
+            red_line_win = tk.Toplevel(root)
+            red_line_win.overrideredirect(True)
+            red_line_win.attributes("-topmost", True)
+            tk.Frame(red_line_win, bg="#dc2626").pack(fill="both", expand=True)
+            red_line_win.geometry("10x20+540+60")
+            red_line_win.update_idletasks()
+            red_line_win.lift()
+
+            end_line_win = tk.Toplevel(root)
+            end_line_win.overrideredirect(True)
+            end_line_win.attributes("-topmost", True)
+            tk.Frame(end_line_win, bg="#dc2626").pack(fill="both", expand=True)
+            finish_line_x = screen_w - 550
+            end_line_win.geometry(f"10x20+{finish_line_x}+60")
+            end_line_win.update_idletasks()
+            end_line_win.lift()
+
+        if red_line_win is not None and end_line_win is not None:
+            t = ease_out_cubic(local_f / phase5_frames)
+            current_h = int(lerp(20, screen_h - 120, t))
+            red_line_win.geometry(f"10x{current_h}+540+60")
+            end_line_win.geometry(f"10x{current_h}+{screen_w - 550}+60")
+
+    # 6. Nedräkning 3, 2, 1, 0 (360 frames = 6 sekunder @ 60 FPS)
+    elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames:
+        local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames)
+
+        light_w, light_h = 90, 90
+        spacing = 20
+        total_lights_w = (3 * light_w) + (2 * spacing)
+        base_x = (screen_w - total_lights_w) // 2
+        start_y = 40
+        target_y = 110
+
+        # Sekund 1 (frames 1 - 60): Skapa trafikljus och visa "3" (alla röda eller mörka början)
+        if local_f == 1:
+            traffic_lights.clear()
+            for idx in range(3):
+                l_win = tk.Toplevel(root)
+                l_win.overrideredirect(True)
+                l_win.attributes("-topmost", True)
+                l_frame = tk.Frame(l_win, bg="#334155")
+                l_frame.pack(fill="both", expand=True)
+                lx = base_x + idx * (light_w + spacing)
+                l_win.geometry(f"{light_w}x1+{lx}+{start_y}")
+                l_win.update_idletasks()
+                l_win.lift()
+                traffic_lights.append((l_win, l_frame))
+            
+            arrow_name_lbl.configure(text="3")
+            arrow_sub_lbl.configure(text="")
+
+        if local_f <= 60:
+            t = ease_out_cubic(local_f / 60)
+            cur_y = int(lerp(start_y, target_y, t))
+            cur_h = max(1, int(lerp(1, light_h, t)))
+            for idx, (l_win, _) in enumerate(traffic_lights):
+                lx = base_x + idx * (light_w + spacing)
+                l_win.geometry(f"{light_w}x{cur_h}+{lx}+{cur_y}")
+
+            # Mjuk förflyttning av pilen till 125 px från toppen
+            current_arrow_x, current_arrow_y = arrow_win.winfo_x(), arrow_win.winfo_y()
+            target_arrow_x = int((screen_w - arrow_w) // 2)
+            target_arrow_y = 125
+            
+            ax = int(lerp(current_arrow_x, target_arrow_x, t))
+            ay = int(lerp(current_arrow_y, target_arrow_y, t))
+            arrow_win.geometry(f"{arrow_w}x{arrow_h}+{ax}+{ay}")
+            arrow_win.lift()
+
+        # Sekund 2 (frames 61 - 120): Siffra 2, första ljuset blir RÖTT
+        elif local_f == 61:
+            arrow_name_lbl.configure(text="2")
+            traffic_lights[0][0].configure(bg="#ef4444")
+            traffic_lights[0][1].configure(bg="#ef4444")
+
+        # Sekund 3 (frames 121 - 180): Siffra 1, andra ljuset blir GULT
+        elif local_f == 121:
+            arrow_name_lbl.configure(text="1")
+            traffic_lights[1][0].configure(bg="#eab308")
+            traffic_lights[1][1].configure(bg="#eab308")
+
+        # Sekund 4 (frames 181 - 240): Siffra 0, tredje ljuset blir GRÖNT
+        elif local_f == 181:
+            arrow_name_lbl.configure(text="0")
+            traffic_lights[2][0].configure(bg="#22c55e")
+            traffic_lights[2][1].configure(bg="#22c55e")
+
+        # Sekund 5-6 (frames 241 - 360): "KÖR!!" (eller liknande text) innan racet startar
+        elif local_f == 241:
+            arrow_name_lbl.configure(text="KÖR!!")
+
+    # 7. Racet (900 frames = 15 sek) + startljusen glider ut samtidigt
+    elif frame <= phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames + phase7_frames:
+        local_f = frame - (phase1_frames + phase2_frames + phase3_frames + phase4_frames + phase5_frames + phase6_frames)
+        t = local_f / phase7_frames
+
+        # Glid ut startljusen uppåt under första sekunden av racet
+        if local_f <= 60 and traffic_lights:
+            light_w, light_h = 90, 90
+            spacing = 20
+            base_x = (screen_w - ((3 * light_w) + (2 * spacing))) // 2
+            slide_t = ease_out_cubic(local_f / 60)
+            cur_y = int(lerp(110, 40, slide_t))
+            cur_h = max(1, int(lerp(light_h, 1, slide_t)))
+            for idx, (l_win, _) in enumerate(traffic_lights):
+                lx = base_x + idx * (light_w + spacing)
+                l_win.geometry(f"{light_w}x{cur_h}+{lx}+{cur_y}")
+        elif local_f == 61 and traffic_lights:
+            for l_win, _ in traffic_lights:
+                l_win.destroy()
+            traffic_lights.clear()
+
+        finish_line_x = screen_w - 450
+        for i, (win, _, _, _) in enumerate(cards):
+            start_x, ly = get_line_pos(i, screen_w, screen_h, n, win_h)
+            finish_ratio, wobble1, wobble2 = race_profiles[i]
+
+            base_progress = t * finish_ratio
+            surge = math.sin(t * math.pi) * wobble1 + math.sin(t * 3 * math.pi) * wobble2
+            progress = max(0.0, base_progress + surge * (1 - abs(2 * t - 1)))
+
+            x = int(lerp(start_x, finish_line_x, progress))
+            win.geometry(f"{win_w}x{win_h}+{x}+{ly}")
+
+        if local_f == phase7_frames:
+            win, frame_w, name_lbl, sub_lbl = cards[winnerindex]
+            frame_w.configure(bg="#ca8a04")
+            name_lbl.configure(bg="#ca8a04", text=f"👑 {winner_name} 👑")
+            sub_lbl.configure(bg="#ca8a04", fg="#fef08a", text="DUBBELVINNARE!")
+            win.lift()
+
+    total_all = (
+        phase1_frames + phase2_frames + phase3_frames + phase4_frames +
+        phase5_frames + phase6_frames + phase7_frames
+    )
     if frame < total_all:
         frame += 1
         root.after(16, animate)
