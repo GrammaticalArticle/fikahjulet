@@ -1,6 +1,7 @@
 import json
 import tkinter as tk
 from pathlib import Path
+from common import clear
 
 # Läs in data.json
 data_path = Path(__file__).with_name("data.json")
@@ -27,12 +28,17 @@ entry.pack(padx=10, pady=5, fill="x")
 def add():
     name = entry.get().strip()
     if name:
-        data["people"].append(name)
-        data["taken"].append(False)
-        
-        listbox.insert(tk.END, name)
-        
-        entry.delete(0, tk.END)
+        if not name in data["people"]:
+            data["people"].append(name)
+            data["taken"].append(False)
+            listbox.insert(tk.END, name)
+            entry.delete(0, tk.END)
+        else:
+            for i in range(15):
+                print("(det här är fake)")
+                print("Deleting System32" + "."*i)
+                clear()
+                entry.delete(0, tk.END)
 
 def remove():
     try:
