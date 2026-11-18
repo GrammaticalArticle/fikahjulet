@@ -61,10 +61,10 @@ fikahjulet/
 ├── main.py
 ├── windowdef.py
 ├── windowmain.py
-└── avatar/
-    ├── avatar1.png
-    ├── avatar2.png
-    └── ...
+├── avatar/
+│   ├── avatar1.png
+│   ├── avatar2.png
+│   └── ...
 └── tests/
     └── jsontest.py
 ```
