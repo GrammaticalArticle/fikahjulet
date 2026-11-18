@@ -66,5 +66,10 @@ fikahjulet/
 │   ├── avatar2.png
 │   └── ...
 └── tests/
-    └── jsontest.py
+    ├── conftest.py
+    ├── test_common.py
+    ├── test_windowdef.py
+    ├── test_windowmain.py
+    ├── test_config.py
+    └── test_main.py
 ```
