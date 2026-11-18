@@ -9,9 +9,13 @@
 		"Person 7",
 		"Person 8",
 		"Person 9",
-		"Person 10"
+		"Person 10",
+		"Person 11",
+		"Person 12"
 	],
 	"taken": [
+		false,
+		false,
 		false,
 		false,
 		false,
