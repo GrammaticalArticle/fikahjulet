@@ -65,4 +65,6 @@ fikahjulet/
     ├── avatar1.png
     ├── avatar2.png
     └── ...
+└── tests/
+    └── jsontest.py
 ```
