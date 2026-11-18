@@ -23,8 +23,6 @@ data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding
 people = data["people"]
 taken = data["taken"]
 
-format_json(taken, people, data)
-
 clear()
 print(f"{colorama.Fore.GREEN}-- Fikahjulet --{colorama.Style.RESET_ALL}")
 sleep(1)
