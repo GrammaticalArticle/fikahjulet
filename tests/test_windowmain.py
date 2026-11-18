@@ -106,7 +106,7 @@ def test_windowmain_updates_winner_crown_and_saves_json(run_windowmain, temp_dat
         font=("Helvetica", 11, "bold"),
         bg="#ca8a04",
         fg="#fef08a",
-        text="DUBBELVINNARE!",
+        text="Ska ta med fika!",
     )
 
     saved = json.loads(temp_data_file.read_text(encoding="utf-8"))

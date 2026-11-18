@@ -281,7 +281,7 @@ def animate():
                 l_win.geometry(f"{light_w}x{cur_h}+{lx}+{cur_y}")
 
             current_arrow_x, current_arrow_y = arrow_win.winfo_x(), arrow_win.winfo_y()
-            target_arrow_x = int((screen_w - arrow_w) // 2)
+            target_arrow_x = int(((screen_w - arrow_w) // 3)*2)
             target_arrow_y = 125
             
             ax = int(lerp(current_arrow_x, target_arrow_x, t))
@@ -350,7 +350,7 @@ def animate():
             frame_w.configure(bg="#ca8a04")
             # Förstora texten och ge vinnaren en distinkt storlek/look
             name_lbl.configure(font=("Helvetica", 16, "bold"), bg="#ca8a04", text=f"👑 {winner_name} 👑")
-            sub_lbl.configure(font=("Helvetica", 11, "bold"), bg="#ca8a04", fg="#fef08a", text="DUBBELVINNARE!")
+            sub_lbl.configure(font=("Helvetica", 11, "bold"), bg="#ca8a04", fg="#fef08a", text="Ska ta med fika!")
             win.lift()
 
     total_all = (
