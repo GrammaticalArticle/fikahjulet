@@ -14,9 +14,6 @@ taken, people, data = format_json(data["taken"], data["people"], data)
 
 data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding="utf-8")
 
-data_path = Path(__file__).with_name("data.json")
-data = json.loads(data_path.read_text(encoding="utf-8"))
-
 root = tk.Tk()
 root.title("Fikahjulet Configuration")
 root.geometry("300x400")
@@ -40,12 +37,17 @@ def add():
             entry.delete(0, tk.END)
         else:
             clear()
-            print("(det här är fake)")
+            print("Du lade till en duplicate, inte fuska!! (Alla föregående ändringar sparas)")
             print("Deleting System32", end="")
             for i in range(15):
                 print(f"\r{colorama.Fore.RED}{colorama.Style.BRIGHT}Deleting System32 [" + "#"*i + " "*(14-i) + f"]{colorama.Style.RESET_ALL}", end="")
                 sleep(0.12)
+            print("Saving", end="")
+            for i in range(20):
+                print(f"\r{colorama.Fore.GREEN}{colorama.Style.BRIGHT}Saving [" + "#"*i + " "*(14-i) + f"]{colorama.Style.RESET_ALL}", end="")
+                sleep(0.07)
             print()
+            save()
             entry.delete(0, tk.END)
             root.destroy()
 
