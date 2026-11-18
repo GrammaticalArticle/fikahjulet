@@ -53,23 +53,24 @@ python config.py
 
 ```text
 fikahjulet/
-├── data.json
 ├── .gitignore
-├── README.md
 ├── common.py
 ├── config.py
+├── data.json
 ├── main.py
+├── pytest.ini
+├── README.md
 ├── windowdef.py
 ├── windowmain.py
 ├── avatar/
 │   ├── avatar1.png
-│   ├── avatar2.png
 │   └── ...
 └── tests/
     ├── conftest.py
+    ├── README.md
     ├── test_common.py
-    ├── test_windowdef.py
-    ├── test_windowmain.py
     ├── test_config.py
-    └── test_main.py
+    ├── test_main.py
+    ├── test_windowdef.py
+    └── test_windowmain.py
 ```
