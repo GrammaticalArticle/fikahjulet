@@ -64,6 +64,7 @@ fikahjulet/
 ├── windowmain.py
 ├── avatar/
 │   ├── avatar1.png
+│   ├── avatar2.png
 │   └── ...
 └── tests/
     ├── conftest.py
