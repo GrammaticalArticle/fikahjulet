@@ -1,0 +1,9 @@
+site_name: Fikahjulet
+docs_dir: doc
+theme: readthedocs
+
+nav:
+  - Hem: index.md
+  - Installation: installation.md
+  - Användning: anvandning.md
+
