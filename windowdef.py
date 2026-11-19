@@ -25,9 +25,11 @@ def get_circle_pos(i, rot=0.0, step_angle=0.0, cx=0, cy=0, radius=0, win_w=0, wi
     y = int(cy + radius * math.sin(angle) - (win_h / 2))
     return x, y
 
-def load_avatar(i, win_h):
-    """Laddar avatar (avatar/avatar[1..10].png) om den finns, utan att sträcka ut den."""
-    avatar_path = Path(__file__).parent / "avatar" / f"avatar{i + 1}.png"
+def load_avatar(avatar_id, win_h):
+    """Laddar avatar (avatar/avatar[id].png) om ett ID finns, utan att sträcka ut den."""
+    if not avatar_id:
+        return None
+    avatar_path = Path(__file__).parent / "avatar" / f"avatar{avatar_id}.png"
     if avatar_path.exists():
         try:
             img = Image.open(avatar_path)
