@@ -66,8 +66,8 @@ def test_get_circle_pos_quadrants(rot, expected_dx, expected_dy):
 def test_load_avatar_missing_returns_none(tmp_path, monkeypatch):
     import windowdef
     monkeypatch.setattr(windowdef, "__file__", str(tmp_path / "windowdef.py"))
-    assert load_avatar(0, win_h=62) is None
-
+    assert load_avatar(1, win_h=62) is None
+    assert load_avatar(None, win_h=62) is None
 
 def test_load_avatar_valid_image_preserves_aspect_ratio(tmp_path, monkeypatch):
     import windowdef
@@ -79,10 +79,9 @@ def test_load_avatar_valid_image_preserves_aspect_ratio(tmp_path, monkeypatch):
     Image.new("RGBA", (200, 100), color="red").save(img_path)
 
     with patch("windowdef.ImageTk.PhotoImage", side_effect=lambda img: img) as mock_photo:
-        resized_img = load_avatar(0, win_h=62)
+        resized_img = load_avatar(1, win_h=62)
         mock_photo.assert_called_once()
         assert resized_img.size == (100, 50)
-
 
 def test_load_avatar_corrupt_file_returns_none(tmp_path, monkeypatch):
     import windowdef
@@ -92,7 +91,7 @@ def test_load_avatar_corrupt_file_returns_none(tmp_path, monkeypatch):
     avatar_dir.mkdir()
     (avatar_dir / "avatar1.png").write_text("not a valid png file", encoding="utf-8")
 
-    assert load_avatar(0, win_h=62) is None
+    assert load_avatar(1, win_h=62) is None
 
 def test_finish_spin_updates_winner_and_writes_json(temp_data_file):
     data = json.loads(temp_data_file.read_text(encoding="utf-8"))
