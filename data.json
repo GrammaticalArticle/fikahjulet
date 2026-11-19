@@ -25,5 +25,8 @@
 		false,
 		true
 	],
-	"avatars": [1, null, null, null, null, null, null, 2, null, null, null]
+	"avatars": {
+		"Chen Yang": 1,
+		"Jonas": 2
+	}
 }
