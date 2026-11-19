@@ -1,26 +1,29 @@
 {
 	"people": [
 		"Chen Yang",
+		"Daniel E",
+		"Daniel S",
+		"Daniel W",
+		"Fredrik",
+		"Goran",
+		"Håkan",
 		"Jonas",
 		"Lars",
-		"Håkan",
-		"Goran",
-		"Person 6",
-		"Person 7",
-		"Person 8",
-		"Person 9",
-		"Person 10"
+		"Per W",
+		"Nicklas"
 	],
 	"taken": [
 		false,
+		true,
+		true,
+		true,
+		true,
+		true,
+		true,
 		false,
+		true,
 		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false,
-		false
-	]
+		true
+	],
+	"avatars": [1, null, null, null, null, null, null, 2, null, null, null]
 }
