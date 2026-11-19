@@ -22,7 +22,7 @@ data_path.write_text(json.dumps(data, indent="\t", ensure_ascii=False), encoding
 
 people = [p.strip() for p in data["people"]]
 taken = data["taken"]
-avatars = data.get("avatars", [])
+avatars = data.get("avatars", {})
 
 available = [i for i, status in enumerate(taken) if not status]
 
@@ -64,7 +64,7 @@ for i, person in enumerate(people):
     frame.pack(fill="both", expand=True)
 
     # Ladda avatar om den finns (placeras till vänster)
-    avatar_img = load_avatar(avatars[i] if i < len(avatars) else None, win_h)
+    avatar_img = load_avatar(avatars.get(person), win_h)
     if avatar_img:
         avatar_references.append(avatar_img)
         avatar_lbl = tk.Label(frame, image=avatar_img, bg=bg_color)
