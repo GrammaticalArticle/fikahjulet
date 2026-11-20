@@ -1,4 +1,4 @@
-# -- Fikahjulet --
+# Fikahjulet
 
 # Imports
 import json
